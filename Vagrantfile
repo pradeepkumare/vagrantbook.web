@@ -1,59 +1,14 @@
-# -*- mode: ruby -*-
-# vi: set ft=ruby :
-#VAGRANTFILE_API_VERSION = "2"
-#Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-#   config.vm.define "web", primary: true do |web|
-#    web.vm.box ="puppetlabs/ubuntu-14.04-32-nocm"
-#    web.vm.network "forwarded_port", guest:80, host:8888
-#    web.vm.provision "shell", inline: "apt-get install -y nginx"
-#   end
-#end
-# Vagrant exercise # Shell Scripts
-# -*- mode: ruby -*-
-# vi: set ft=ruby :
-#VAGRANTFILE_API_VERSION = "2"
-#$nginx_install= <<SCRIPT
-#if [ ! -x /usr/sbin/ngnix ]; then
-#  apt-get update && apt-get install -y nginx
-#fi
-## Default NGINX directory: /usr/share/nginx/html
-## Replace this with symbolic link to vagrant directory.
-#if [ ! -L /usr/share/nginx/html ]; then
-#  rm -rf /usr/share/nginx/html
-#  ln -s /vagrant/html /usr/share/nginx/html
-#fi
-#SCRIPT
-
-#Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-#  config.vm.box = "puppetlabs/ubuntu-14.04-32-nocm"
-#  config.vm.provision "shell", inline: $nginx_install
-#  config.vm.network "forwarded_port", guest:80, host:8080
-   #inline: "echo 'Vagrant cookbook example Environment' > /etc/motd "
- #end
-###################################################
-## Configuring Vagrant environments with external SCRIPT
-
-# -*- mode: ruby -*-
-# vi: set ft=ruby :
-# VAGRANTFILE_API_VERSION = "2"
-
-# Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-#   config.vm.box = "puppetlabs/ubuntu-14.04-32-nocm"
-#   config.vm.provision "shell", path: "nginx-install.sh"
-#   config.vm.network "forwarded_port", guest:80, host:8080
-#    #inline: "echo 'Vagrant cookbook example Environment' > /etc/motd "
-#  end
-
-#####################
-#Configuring Vagrant environments with Puppet
-# -*- mode: ruby -*-
-# vi: set ft=ruby :
 VAGRANTFILE_API_VERSION = "2"
-
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-  config.vm.define "Web", :primary => true do |web|
-    web.vm.box = "puppetlabs/ubuntu-14.04-64-puppet"
-    web.vm.hostname = "web"
-    web.vm.network "forwarded_port", guest:80, host: 8080
-  end
+ config.vm.define "web", primary: true do |web|
+  web.vm.box ="centos/7"
+  web.vm.hostname= "Docker"
+  web.vm.network "forwarded_port", guest:80, host:8888, auto_correct:true
+  web.vm.synced_folder "vagrantsite/", "/opt/vagrantsite"
+  web.vm.provision "shell", inline: "yum install docker -y ; "
+  #web.vm.provider "virtualbox" do |vbox|
+  #  vbox.memory = 2048
+  #  vbox.cpus = 2
+  #end
+ end
 end

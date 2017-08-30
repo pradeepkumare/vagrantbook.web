@@ -1,0 +1,32 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+$updateLocale=<<-UPDLOCALE
+
+ echo "updating locale"
+  echo 'LANG="en_US.UTF-8"' > /etc/locale.conf
+
+UPDLOCALE
+
+Vagrant.configure("2") do |config|
+  #config.vm.box = "centos-7.0-x86_64"
+  config.vm.box = "centos/7"
+  config.vm.hostname = "docker"
+  config.vm.network "private_network", ip: "192.168.95.160"
+  #config.vm.network "public_network" , ip: "192.168.95.180"
+  #config.vm.network "forwarded_port", guest: 80, host: 80
+  #config.vm.network "forwarded_port", guest: 8443, host: 8443
+
+  config.vm.provider "virtualbox" do |v|
+    v.name = "docker_centos7"
+    v.memory = 2048
+    v.cpus = 2
+  end
+
+ # config.vm.provision "file", source: "../../../../config", destination: "devops"
+  config.vm.provision "shell", inline: "/bin/systemctl stop firewalld && /bin/systemctl disable firewalld"
+  config.vm.provision "shell", inline: "yum install -y docker"
+  #config.vm.provision "shell", path: "../default-provision.sh"
+  #config.vm.provision "shell", path: "../puppet-provision.sh"
+
+end
